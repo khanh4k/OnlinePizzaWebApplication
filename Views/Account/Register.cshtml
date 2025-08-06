@@ -1,0 +1,115 @@
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(120deg, #4e54c8, #8f94fb);
+    }
+
+    .register-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .register-box {
+        background: #fff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 420px;
+    }
+
+        .register-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #6c63ff;
+        border: none;
+        transition: background-color 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #574fd6;
+        }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+    .extra-links {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .extra-links a {
+            text-decoration: none;
+            color: #6c63ff;
+            font-weight: 500;
+        }
+
+            .extra-links a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-box">
+        <h2>Tạo tài khoản mới</h2>
+
+        <form asp-controller="Account" asp-action="Register" method="post">
+            @if (Model?.Errors?.Any() == true)
+            {
+                <ul class="text-danger mb-3">
+                    @foreach (var error in Model.Errors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Nhập email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Mật khẩu</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Đăng ký</button>
+            </div>
+
+            <div class="extra-links">
+                <a asp-controller="Home" asp-action="Index">← Trang chủ</a>
+                <a asp-controller="Account" asp-action="Login">Đã có tài khoản? Đăng nhập →</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

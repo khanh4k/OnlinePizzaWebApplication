@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Giới thiệu";
+}
+<style>
+    .hero-section {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+    }
+
+        .hero-section h1 {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .hero-section p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 20px auto;
+            line-height: 1.8;
+        }
+
+    .features-section {
+        padding: 60px 20px;
+        background-color: #f8f9fa;
+    }
+
+    .feature-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-box i {
+            font-size: 40px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+    .team-section {
+        padding: 60px 20px;
+    }
+
+    .team-member {
+        text-align: center;
+        padding: 20px;
+    }
+
+        .team-member img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .team-member h5 {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .team-member span {
+            font-size: 14px;
+            color: #888;
+        }
+</style>
+
+<!-- HERO SECTION -->
+<div class="hero-section">
+    <h1>Chào mừng đến với <span style="color:#ffd700;">Foodie Express</span></h1>
+    <p>Chúng tôi là đội ngũ đam mê ẩm thực, với sứ mệnh mang đến những món ăn chất lượng cao, phục vụ tận tâm và trải nghiệm mua sắm trực tuyến tuyệt vời nhất cho khách hàng Việt Nam.</p>
+</div>
+
+<!-- FEATURE SECTION -->
+<div class="features-section container">
+    <div class="row text-center mb-5">
+        <h2 class="fw-bold">Điều gì khiến chúng tôi khác biệt?</h2>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-box">
+                <i class="fa-solid fa-truck-fast"></i>
+                <h5>Giao hàng siêu tốc</h5>
+                <p>Chúng tôi giao hàng nhanh trong vòng 30 phút để đảm bảo món ăn đến tay bạn vẫn còn nóng hổi và tươi mới.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-box">
+                <i class="fa-solid fa-bowl-food"></i>
+                <h5>Thực phẩm chất lượng</h5>
+                <p>Nguyên liệu tươi ngon mỗi ngày, được chế biến bởi những đầu bếp giàu kinh nghiệm và đam mê.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-box">
+                <i class="fa-solid fa-headset"></i>
+                <h5>Hỗ trợ 24/7</h5>
+                <p>Đội ngũ chăm sóc khách hàng luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi qua điện thoại, chat và email.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TEAM SECTION -->
+<div class="team-section container">
+    <div class="row text-center mb-5">
+        <h2 class="fw-bold">Gặp gỡ đội ngũ của chúng tôi</h2>
+    </div>
+    <div class="row justify-content-center g-4">
+        <div class="col-md-3 team-member">
+            <img src="~/images/2.jpg" alt="CEO" />
+            <span> điều hành</span>
+        </div>
+        <div class="col-md-3 team-member">
+            <img src="~/images/3.jpg" alt="Chef" />
+            <span>Bếp trưởng</span>
+        </div>
+        <div class="col-md-3 team-member">
+            <img src="~/images/4.jpg" alt="Tech" />
+            <span>Giữ Xe </span>
+        </div>
+        <div class="col-md-3 team-member">
+            <img src="~/images/6.jpg" alt="" />
+            <span>Phục Vụ</span>
+        </div>
+    </div>
+    

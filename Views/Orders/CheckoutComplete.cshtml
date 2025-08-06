@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Order Complete";
+}
+
+<style>
+    .order-complete-container {
+        max-width: 600px;
+        margin: 80px auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+        .order-complete-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .order-complete-container h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .order-complete-container h2 {
+            font-weight: 500;
+            font-size: 1.3rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .order-complete-container p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+    .btn-group a {
+        margin: 0 10px;
+    }
+</style>
+
+<div class="order-complete-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" />
+
+    <h1>@ViewBag.CheckoutCompleteMessage</h1>
+
+    <h2>🎉 Cảm ơn bạn đã đặt hàng!</h2>
+
+    <p>
+        Chúng tôi đã nhận được đơn hàng của bạn và đang tiến hành xử lý.<br />
+        Pizza nóng hổi sẽ đến tay bạn trong thời gian sớm nhất!
+    </p>
+
+    <div class="btn-group">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">🏠 Về trang chủ</a>
+        <a asp-controller="Orders" asp-action="MyOrders" class="btn btn-primary">📦 Xem đơn hàng của tôi</a>
+    </div>
+</div>

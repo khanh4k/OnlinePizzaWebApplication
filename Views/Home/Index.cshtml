@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Pizzas>
+
+@{
+    var pageName = "Home Page";
+    ViewData["Title"] = pageName;
+}
+
+<!-- Banner Section -->
+<section class="text-center py-5 bg-light">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">🍕 Welcome to My Pizza Shop!</h1>
+        <p class="lead mb-4">Here's our weekly selection of delicious pizzas.</p>
+        <a href="/Pizzas/ListAll" class="btn btn-danger btn-lg rounded-pill shadow">Explore Menu</a>
+    </div>
+</section>
+
+<!-- Carousel Section -->
+<section class="my-5">
+    <div class="container">
+        @await Component.InvokeAsync("CarouselMenu")
+    </div>
+</section>
+
+

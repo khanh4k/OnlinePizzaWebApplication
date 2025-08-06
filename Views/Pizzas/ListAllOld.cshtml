@@ -1,0 +1,20 @@
+@model IEnumerable<Pizzas>
+
+@{
+    var ModelName = "Search Pizzas";
+    ViewData["Title"] = ModelName;
+}
+
+<h2>@ModelName</h2>
+<hr />
+
+
+
+<div id="PizzaSummaryId" class="card-container">
+    @foreach (var pizza in Model)
+    {
+        @await Html.PartialAsync("PizzaSummary", pizza)
+    }
+</div>
+    
+<br />

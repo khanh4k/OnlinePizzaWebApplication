@@ -1,0 +1,19 @@
+@model IEnumerable<Pizzas>
+
+@{
+    var pageName = ViewBag.CurrentCategory;
+    ViewData["Title"] = pageName;
+}
+
+<h2>@pageName</h2>
+<hr />
+
+
+<div id="PizzaSummaryId" class="card-container">
+    @foreach (var pizza in Model)
+    {
+        @await Html.PartialAsync("PizzaSummary", pizza)
+    }
+</div>
+
+<br />

@@ -1,0 +1,17 @@
+﻿@model List<Pizzas>
+
+<h4>Search Results</h4>
+
+@if (Model.Any())
+{
+    <div id="SearchResultsPizzaSummaryId" class="card-container">
+        @foreach (var pizza in Model)
+        {
+            @await Html.PartialAsync("PizzaSummary", pizza)
+        }
+    </div>
+}
+else
+{
+    <p>No pizzas found.</p>
+}

@@ -1,0 +1,84 @@
+@model Order
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Thông tin đơn hàng</h3>
+        </div>
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Họ tên:</strong> @Model.FirstName @Model.LastName<br />
+                    <strong>Email:</strong> @Model.Email<br />
+                    <strong>SĐT:</strong> @Model.PhoneNumber<br />
+                </div>
+                <div class="col-md-6">
+                    <strong>Địa chỉ:</strong><br />
+                    @Model.AddressLine1<br />
+                    @if (!string.IsNullOrEmpty(Model.AddressLine2))
+                    {
+                        @Model.AddressLine2
+                    
+                        <br />
+                    }
+                    @Model.City, @Model.State, @Model.ZipCode<br />
+                    @Model.Country
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="mb-3">
+                <strong>Ngày đặt hàng:</strong> @Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")
+            </div>
+
+            <h5 class="text-secondary mt-4 mb-3">Chi tiết món ăn</h5>
+
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Món</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal total = 0M;
+                        foreach (OrderDetail orderDetail in ViewBag.OrderDetailsList)
+                        {
+                            var subtotal = orderDetail.Amount * orderDetail.Price;
+                            total += subtotal;
+                        }
+                    }
+                    @foreach (OrderDetail orderDetail in ViewBag.OrderDetailsList)
+                    {
+                        var subtotal = orderDetail.Amount * orderDetail.Price;
+                        <tr>
+                            <td>@orderDetail.Pizza.Name</td>
+                            <td>@orderDetail.Amount</td>
+                            <td>@orderDetail.Price.ToString("c")</td>
+                            <td>@subtotal.ToString("c")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-secondary">
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Tổng cộng:</td>
+                        <td class="fw-bold">@Model.OrderTotal.ToString("c")</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>

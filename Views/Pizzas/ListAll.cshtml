@@ -1,0 +1,90 @@
+﻿@model SearchPizzasViewModel
+
+@{
+    var pageName = "Pizzas Menu";
+    ViewData["Title"] = pageName;
+}
+
+<style>
+    .search-section {
+        margin: 40px 0 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .search-box {
+        max-width: 600px;
+        width: 100%;
+        position: relative;
+    }
+
+        .search-box input {
+            padding-left: 2.5rem;
+            border-radius: 30px;
+            height: 45px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+    #PizzaSummaryId {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    #SuggestOutput {
+        text-align: center;
+        margin-top: 10px;
+        color: #6c63ff;
+    }
+
+    h2, h4 {
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .card-container {
+        margin-bottom: 40px;
+    }
+</style>
+
+<h2 class="mt-4">@pageName</h2>
+
+<div class="search-section">
+    <form asp-controller="Pizzas" asp-action="ListAll" method="get" class="search-box">
+        <i class="bi bi-search"></i> <!-- Bootstrap icon, cần thêm thư viện -->
+        <input asp-for="SearchText"
+               class="form-control"
+               id="SearchFieldId"
+               placeholder="Tìm pizza theo tên, nguyên liệu..."
+               oninput="listSearchExamplesScript()" />
+    </form>
+</div>
+
+<div id="SuggestOutput"></div>
+
+@if (!string.IsNullOrWhiteSpace(Model.SearchText))
+{
+    <h4>Kết quả cho: "@Model.SearchText"</h4>
+}
+else
+{
+    <h4>Tất cả các loại Pizza</h4>
+}
+
+<div id="PizzaSummaryId">
+    @foreach (var pizza in Model.PizzaList)
+    {
+        @await Html.PartialAsync("PizzaSummary", pizza)
+    }
+</div>
+
+<hr class="my-5" />
