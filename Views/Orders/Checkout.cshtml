@@ -108,6 +108,12 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-5">
+                    <button type="submit" class="btn btn-success" formaction="@Url.Action("CheckoutWithVNPay", "Orders")" formmethod="post">Pay with VNPay</button>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary btn-checkout">Hoàn tất đơn hàng</button>
         </form>
     </div>

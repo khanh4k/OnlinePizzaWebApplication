@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,10 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using OnlinePizzaWebApplication.Data;
+using OnlinePizzaWebApplication.Service;
+using OnlinePizzaWebApplication.ViewModels;
 
 namespace OnlinePizzaWebApplication.Controllers
 {
-    //[Authorize(Roles = "Admin")]
     [Authorize]
     public class OrdersController : Controller
     {
@@ -22,14 +23,17 @@ namespace OnlinePizzaWebApplication.Controllers
         private readonly ShoppingCart _shoppingCart;
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IVnPayService _vnPayService;
 
-        public OrdersController(IOrderRepository orderRepository, 
-            ShoppingCart shoppingCart, AppDbContext context, UserManager<IdentityUser> userManager)
+        public OrdersController(IOrderRepository orderRepository,
+            ShoppingCart shoppingCart, AppDbContext context, UserManager<IdentityUser> userManager,
+            IVnPayService vnPayService)
         {
             _orderRepository = orderRepository;
             _shoppingCart = shoppingCart;
             _context = context;
             _userManager = userManager;
+            _vnPayService = vnPayService;
         }
 
         [Authorize]
@@ -43,7 +47,10 @@ namespace OnlinePizzaWebApplication.Controllers
         public async Task<IActionResult> Checkout(Order order)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            order.UserId = userId;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
 
             var items = await _shoppingCart.GetShoppingCartItemsAsync();
             _shoppingCart.ShoppingCartItems = items;
@@ -51,17 +58,70 @@ namespace OnlinePizzaWebApplication.Controllers
             if (_shoppingCart.ShoppingCartItems.Count == 0)
             {
                 ModelState.AddModelError("", "Your cart is empty, add some pizzas first");
+                return View(order);
             }
 
             if (ModelState.IsValid)
             {
-                await _orderRepository.CreateOrderAsync(order);
-                await _shoppingCart.ClearCartAsync();
+                order.UserId = userId;
+                order.OrderPlaced = DateTime.Now;
+                order.OrderTotal = _shoppingCart.ShoppingCartItems.Sum(item => item.Pizza.Price * item.Amount);
+                order.Status = "Pending COD";
 
-                return RedirectToAction("CheckoutComplete");
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                ViewBag.CheckoutCompleteMessage = $"Thanks for your order {order.OrderId}! We'll deliver your pizzas soon!";
+                return View("CheckoutComplete");
             }
 
             return View(order);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CheckoutWithVNPay(Order order)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var items = await _shoppingCart.GetShoppingCartItemsAsync();
+            _shoppingCart.ShoppingCartItems = items;
+
+            if (_shoppingCart.ShoppingCartItems.Count == 0)
+            {
+                ModelState.AddModelError("", "Your cart is empty, add some pizzas first");
+                return View("Checkout", order);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("Checkout", order);
+            }
+
+            // Lưu Order vào database
+            order.UserId = userId;
+            order.OrderPlaced = DateTime.Now;
+            order.OrderTotal = _shoppingCart.ShoppingCartItems.Sum(item => item.Pizza.Price * item.Amount);
+            order.Status = "Pending Payment";
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            // Tạo yêu cầu thanh toán VNPay
+            var vnPayModel = new VnPaymentRequestModel
+            {
+                OrderId = order.OrderId.ToString(),
+                FullName = $"{order.FirstName} {order.LastName}",
+                Description = "Order from OnlinePizzaWebApplication",
+                Amount = (double)order.OrderTotal,
+                CreatedDate = order.OrderPlaced
+            };
+
+            var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel);
+            return Redirect(paymentUrl);
         }
 
         [Authorize]
@@ -69,6 +129,38 @@ namespace OnlinePizzaWebApplication.Controllers
         {
             ViewBag.CheckoutCompleteMessage = $"Thanks for your order, We'll deliver your pizzas soon!";
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PaymentCallback()
+        {
+            var response = Request.Query;
+            string vnp_TransactionStatus = response["vnp_TransactionStatus"];
+            string vnp_TxnRef = response["vnp_TxnRef"];
+            string vnp_Amount = response["vnp_Amount"];
+
+            Console.WriteLine($"PaymentCallback - vnp_TxnRef: {vnp_TxnRef}, vnp_TransactionStatus: {vnp_TransactionStatus}, vnp_Amount: {vnp_Amount}");
+
+            if (!string.IsNullOrEmpty(vnp_TransactionStatus) && vnp_TransactionStatus == "00")
+            {
+                if (int.TryParse(vnp_TxnRef, out int orderId))
+                {
+                    var order = await _context.Orders.FindAsync(orderId);
+                    if (order != null)
+                    {
+                        order.Status = "Paid VNPay";
+                        order.OrderTotal = decimal.Parse(vnp_Amount) / 100;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                ViewBag.CheckoutCompleteMessage = "Thanks for your order! Payment VNPay was successful. We'll deliver your pizzas soon!";
+                return View("CheckoutComplete");
+            }
+            else
+            {
+                Console.WriteLine($"Payment failed or invalid status: {vnp_TransactionStatus}");
+                return RedirectToAction("Checkout");
+            }
         }
 
         // GET: Reviews
@@ -111,7 +203,7 @@ namespace OnlinePizzaWebApplication.Controllers
                 return NotFound();
             }
 
-            if (isAdmin == false)
+            if (!isAdmin)
             {
                 var userId = _userManager.GetUserId(HttpContext.User);
                 if (orders.UserId != userId)
@@ -142,7 +234,6 @@ namespace OnlinePizzaWebApplication.Controllers
             try
             {
                 // TODO: Add insert logic here
-
                 return RedirectToAction("Index");
             }
             catch
@@ -165,7 +256,6 @@ namespace OnlinePizzaWebApplication.Controllers
             try
             {
                 // TODO: Add update logic here
-
                 return RedirectToAction("Index");
             }
             catch
@@ -205,6 +295,5 @@ namespace OnlinePizzaWebApplication.Controllers
 
             return RedirectToAction("Index");
         }
-
     }
 }

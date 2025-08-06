@@ -13,7 +13,7 @@ namespace OnlinePizzaWebApplication.Models
 {
     public class Order
     {
-        [BindNever]
+        [Key]
         public int OrderId { get; set; }
 
         public List<OrderDetail> OrderLines { get; set; }
@@ -76,13 +76,12 @@ namespace OnlinePizzaWebApplication.Models
         [DisplayName("Order Date")]
         public DateTime OrderPlaced { get; set; }
 
-        //[BindNever]
-        //[ScaffoldColumn(false)]
-        //public string OrderStatus { get; set; }
+        [DisplayName("Order Status")]
+        [Required]
+        public string Status { get; set; } = "Pending";
 
         public string UserId { get; set; }
 
         public IdentityUser User { get; set; }
-        
     }
 }
