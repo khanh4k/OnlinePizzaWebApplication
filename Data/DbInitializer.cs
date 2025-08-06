@@ -74,8 +74,8 @@ namespace OnlinePizzaWebApplication.Data
             var piz6 = new Pizzas { Name = "Pescatore", Price = 80.00M, Category = cat1, Description = "A pizza with taste from the ocean.", ImageUrl = "https://isinginthekitchen.files.wordpress.com/2014/07/dsc_0231.jpg", IsPizzaOfTheWeek = true };
             var piz7 = new Pizzas { Name = "Barcelona", Price = 70.00M, Category = cat1, Description = "A pizza with taste from Spain, Barcelona", ImageUrl = "http://barcelona-home.com/blog/wp-content/upload/pizza/Pizzeria%20Los%20Amigos/pizza-jamon-dulce-y-champinone.jpg", IsPizzaOfTheWeek = false };
             var piz8 = new Pizzas { Name = "Flying Jacob", Price = 89.00M, Category = cat2, Description = "Flying pizza from the sky, with taste of banana.", ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/6/64/Pizza_Hawaii_Special_p%C3%A5_Pizzeria_Papillon_i_Sala_1343.jpg", IsPizzaOfTheWeek = false };
-            var piz9 = new Pizzas { Name = "Kentucky", Price = 69.00M, Category = cat3, Description = "A pizza from America with the taste of Kuntucky Chicken.", ImageUrl = "http://assets.kraftfoods.com/recipe_images/opendeploy/54150_640x428.jpg", IsPizzaOfTheWeek = false };
-            var piz10 = new Pizzas { Name = "La Carne", Price = 75.00M, Category = cat1, Description = "Italian pizza with lot's of delicious meat.", ImageUrl = "https://www.davannis.com/wp-content/uploads/2015/03/five-meat.jpg", IsPizzaOfTheWeek = false };
+            var piz9 = new Pizzas { Name = "Kentucky", Price = 69.00M, Category = cat3, Description = "A pizza from America with the taste of Kuntucky Chicken.", ImageUrl = "https://londonpizzadepot.co.uk/wp-content/uploads/2020/05/PizzaKentuckyBadassBBQ-new.jpg", IsPizzaOfTheWeek = false };
+            var piz10 = new Pizzas { Name = "La Carne", Price = 75.00M, Category = cat1, Description = "Italian pizza with lot's of delicious meat.", ImageUrl = "https://imag.bonviveur.com/pizza-de-carne-picada.jpg", IsPizzaOfTheWeek = false };
 
             var pizs = new List<Pizzas>()
             {
