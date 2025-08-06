@@ -31,11 +31,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Pizza.Name)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" title="Details">
+                        <i class="fas fa-info-circle"></i>
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" title="Delete">
+                        <i class="fas fa-trash-alt text-danger"></i>
+                    </a>
+                </td>
+
         </tr>
 }
     </tbody>

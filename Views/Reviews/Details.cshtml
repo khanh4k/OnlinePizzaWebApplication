@@ -1,48 +1,52 @@
 @model OnlinePizzaWebApplication.Models.Reviews
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Review Details";
 }
 
-<h2>Details</h2>
+<h2>Review Details</h2>
 
-<div>
+<div class="form-horizontal">
     <h4>Reviews</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">@Html.DisplayNameFor(model => model.Title)</label>
+        <div class="col-sm-10 col-form-label">
             @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">@Html.DisplayNameFor(model => model.Description)</label>
+        <div class="col-sm-10 col-form-label">
             @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Grade)
-        </dt>
-        <dd>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">@Html.DisplayNameFor(model => model.Grade)</label>
+        <div class="col-sm-10 col-form-label">
             @Html.DisplayFor(model => model.Grade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">@Html.DisplayNameFor(model => model.Date)</label>
+        <div class="col-sm-10 col-form-label">
             @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Pizza)
-        </dt>
-        <dd>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Pizza</label>
+        <div class="col-sm-10 col-form-label">
             @Html.DisplayFor(model => model.Pizza.Name)
-        </dd>
-    </dl>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="form-group mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
 </div>

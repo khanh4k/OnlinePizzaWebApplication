@@ -1,7 +1,10 @@
 @model Pizzas
 
 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-    <div class="card shadow-sm border-0 rounded-4 h-100">
+    <div class="card shadow-sm border-0 rounded-4 h-100"
+         style="cursor: pointer;"
+         onclick="location.href='@Url.Action("DisplayDetails", "Pizzas", new { id = Model.Id })'">
+
         <img src="@Model.ImageUrl"
              class="card-img-top"
              alt="Ảnh của @Model.Name"
@@ -19,12 +22,6 @@
                     @Model.Price.ToString("C")
                 </span>
 
-                <a asp-controller="Pizzas"
-                   asp-action="DisplayDetails"
-                   asp-route-id="@Model.Id"
-                   class="btn btn-sm btn-outline-primary rounded-pill">
-                    Xem chi tiết
-                </a>
             </div>
 
             <form asp-controller="ShoppingCart"

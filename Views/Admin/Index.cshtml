@@ -1,16 +1,21 @@
-
-@{
+﻿@{
     var ModelName = "Admin Page";
     ViewData["Title"] = ModelName;
 }
 
-<h2>@ModelName</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-white">@ModelName</h2>
 
-<h3><a asp-controller="Pizzas" asp-action="Index">Pizzas</a></h3>
-<h3><a asp-controller="Categories" asp-action="Index">Categories</a></h3>
-<h3><a asp-controller="Ingredients" asp-action="Index">Ingredients</a></h3>
-<h3><a asp-controller="PizzaIngredients" asp-action="Index">PizzaIngredients</a></h3>
-<h3><a asp-controller="Reviews" asp-action="Index">Reviews</a></h3>
-<h3><a asp-controller="Orders" asp-action="Index">Orders</a></h3>
-<h3><a asp-controller="Admin" asp-action="SeedDatabase">Seed Database</a></h3>
-<h3><a asp-controller="Admin" asp-action="ClearDatabase">Clear Database</a></h3>
+    <div class="card shadow p-4" style="background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 10px;">
+        <div class="list-group">
+            <a asp-controller="Pizzas" asp-action="Index" class="list-group-item list-group-item-action">🍕 Pizzas</a>
+            <a asp-controller="Categories" asp-action="Index" class="list-group-item list-group-item-action">📂 Categories</a>
+            <a asp-controller="Ingredients" asp-action="Index" class="list-group-item list-group-item-action">🥬 Ingredients</a>
+            <a asp-controller="PizzaIngredients" asp-action="Index" class="list-group-item list-group-item-action">🔗 PizzaIngredients</a>
+            <a asp-controller="Reviews" asp-action="Index" class="list-group-item list-group-item-action">⭐ Reviews</a>
+            <a asp-controller="Orders" asp-action="Index" class="list-group-item list-group-item-action">🧾 Orders</a>
+            <a asp-controller="Admin" asp-action="SeedDatabase" class="list-group-item list-group-item-action text-success">🌱 Seed Database</a>
+            <a asp-controller="Admin" asp-action="ClearDatabase" class="list-group-item list-group-item-action text-danger">🗑️ Clear Database</a>
+        </div>
+    </div>
+</div>
