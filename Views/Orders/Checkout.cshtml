@@ -1,120 +1,208 @@
-@model Order
-
 @{
     ViewData["Title"] = "Check Out";
 }
 
+@model Order
+
 <style>
+    <style >
+    /* Tổng quan cho trang */
+    body {
+        background-color: #f7f9fc; /* Màu nền nhẹ nhàng, dễ chịu */
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* Vùng chứa chính */
     .checkout-container {
-        max-width: 700px;
+        max-width: 650px; /* Giảm chiều rộng để tập trung nội dung */
         margin: 50px auto;
     }
 
+    /* Thẻ chứa nội dung chính */
     .card {
         border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); /* Tăng độ nổi bật của shadow */
+        padding: 40px; /* Tăng padding để có không gian thoáng hơn */
         background-color: #ffffff;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
+        .card:hover {
+            transform: translateY(-5px); /* Hiệu ứng nổi nhẹ khi rê chuột */
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Tiêu đề */
         .card h2 {
             font-weight: 700;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 2.2rem;
         }
 
+        /* Dòng mô tả nhỏ */
+        .card p {
+            text-align: center;
+            font-style: normal;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+    /* Label của input */
     .form-label {
         font-weight: 600;
+        color: #555;
     }
 
+    /* Input và các trường form */
+    .form-control {
+        border-radius: 12px;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+    /* Nút chính "Hoàn tất đơn hàng" */
     .btn-checkout {
         width: 100%;
         border-radius: 30px;
         font-weight: bold;
-        padding: 10px 0;
+        padding: 15px 0;
+        font-size: 1.2rem;
+        background-color: #ff6b6b; /* Màu đỏ nổi bật */
+        border: none;
+        box-shadow: 0 8px 15px rgba(255, 107, 107, 0.3);
+        transition: all 0.3s ease;
     }
 
+        .btn-checkout:hover {
+            background-color: #e55a5a;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(255, 107, 107, 0.4);
+        }
+
+    /* Nút thanh toán VNPay */
+    .btn-success {
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 30px;
+        background-color: #00b894; /* Màu xanh lá cây tươi mới */
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 184, 148, 0.2);
+        transition: all 0.3s ease;
+    }
+
+        .btn-success:hover {
+            background-color: #00a887;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.3);
+        }
+
+    /* Thông báo lỗi */
     .text-danger {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        color: #ff4757 !important;
+    }
+
+    hr {
+        border-top: 2px solid #f0f0f0;
+        margin-bottom: 25px;
     }
 </style>
 
 <div class="checkout-container">
     <div class="card">
-        <h2>Hoàn tất đơn hàng của bạn</h2>
-        <p class="text-center text-muted">Bạn chỉ còn một bước nữa để có pizza ngon!</p>
+        <h2>🚀 Hoàn tất đơn hàng</h2>
+        <p>Thưởng thức pizza thơm ngon chỉ trong một bước!</p>
         <hr />
 
         <form asp-action="Checkout" method="post">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div asp-validation-summary="All" class="text-danger mb-4"></div>
 
-            <div class="mb-3">
-                <label asp-for="FirstName" class="form-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FirstName" class="form-label">Tên</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="LastName" class="form-label">Họ</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="LastName" class="form-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="AddressLine1" class="form-label"></label>
-                <input asp-for="AddressLine1" class="form-control" />
+                <label asp-for="AddressLine1" class="form-label">Địa chỉ</label>
+                <input asp-for="AddressLine1" class="form-control" placeholder="Số nhà, tên đường, ..." />
                 <span asp-validation-for="AddressLine1" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="AddressLine2" class="form-label"></label>
-                <input asp-for="AddressLine2" class="form-control" />
+                <label asp-for="AddressLine2" class="form-label">Địa chỉ (tùy chọn)</label>
+                <input asp-for="AddressLine2" class="form-control" placeholder="Tên tòa nhà, số căn hộ, ..." />
                 <span asp-validation-for="AddressLine2" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="ZipCode" class="form-label"></label>
-                <input asp-for="ZipCode" class="form-control" />
-                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="City" class="form-label">Thành phố</label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ZipCode" class="form-label">Mã bưu điện</label>
+                    <input asp-for="ZipCode" class="form-control" />
+                    <span asp-validation-for="ZipCode" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="State" class="form-label">Quận/Huyện</label>
+                    <input asp-for="State" class="form-control" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Country" class="form-label">Quốc gia</label>
+                    <input asp-for="Country" class="form-control" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="City" class="form-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="State" class="form-label"></label>
-                <input asp-for="State" class="form-control" />
-                <span asp-validation-for="State" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Country" class="form-label"></label>
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="PhoneNumber" class="form-label"></label>
+                <label asp-for="PhoneNumber" class="form-label">Số điện thoại</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
+            <div class="mb-4">
+                <label asp-for="Email" class="form-label">Email</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-5">
-                    <button type="submit" class="btn btn-success" formaction="@Url.Action("CheckoutWithVNPay", "Orders")" formmethod="post">Pay with VNPay</button>
+            <hr />
+
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <button type="submit" class="btn btn-success w-100" formaction="@Url.Action("CheckoutWithVNPay", "Orders")" formmethod="post">
+                        Thanh toán bằng VNPay 💳
+                    </button>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <button type="submit" class="btn btn-primary btn-checkout w-100">Đặt hàng 🍕</button>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-checkout">Hoàn tất đơn hàng</button>
         </form>
     </div>
-</div>
+</div>div>

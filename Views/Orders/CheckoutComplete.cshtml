@@ -2,60 +2,132 @@
     ViewData["Title"] = "Order Complete";
 }
 
+@model Order
+
 <style>
+    /* Tổng quan */
+    body {
+        background-color: #f0f2f5; /* Nền xám nhẹ nhàng */
+        font-family: 'Poppins', sans-serif; /* Sử dụng font hiện đại hơn */
+    }
+
+    /* Vùng chứa chính */
     .order-complete-container {
         max-width: 600px;
         margin: 80px auto;
-        padding: 40px;
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 50px;
+        background-color: #ffffff;
+        border-radius: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         text-align: center;
+        border: 1px solid #e0e0e0;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    /* Biểu tượng "Success" */
+    .success-icon {
+        width: 120px;
+        height: 120px;
+        background-color: #28a745;
+        color: #fff;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        margin-bottom: 25px;
+        animation: bounceIn 1s ease-out;
     }
 
-        .order-complete-container img {
-            width: 100px;
-            margin-bottom: 20px;
-        }
 
-        .order-complete-container h1 {
-            font-weight: 700;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .order-complete-container h2 {
-            font-weight: 500;
-            font-size: 1.3rem;
-            color: #28a745;
-            margin-bottom: 20px;
-        }
-
-        .order-complete-container p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-    .btn-group a {
-        margin: 0 10px;
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
     }
+
+    100% {
+        transform: scale(1);
+    }
+
+    }
+
+    /* Tiêu đề chính */
+    .order-complete-container h1 {
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    /* Tiêu đề phụ */
+    .order-complete-container h2 {
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #555;
+        margin-bottom: 25px;
+    }
+
+    /* Đoạn văn mô tả */
+    .order-complete-container p {
+        font-size: 1.1rem;
+        color: #777;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    /* Nhóm nút */
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    /* Nút chính */
+    .btn-primary {
+        background-color: #ff6b6b;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 30px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #e55a5a;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+    /* Nút phụ */
+    .btn-outline-secondary {
+        border: 2px solid #ced4da;
+        color: #6c757d;
+        background-color: transparent;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #e9ecef;
+            color: #495057;
+            border-color: #adb5bd;
+        }
 </style>
 
 <div class="order-complete-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" />
+    <div class="success-icon">✔️</div>
 
-    <h1>@ViewBag.CheckoutCompleteMessage</h1>
-
-    <h2>🎉 Cảm ơn bạn đã đặt hàng!</h2>
+    <h1>Đơn hàng đã hoàn tất!</h1>
 
     <p>
-        Chúng tôi đã nhận được đơn hàng của bạn và đang tiến hành xử lý.<br />
-        Pizza nóng hổi sẽ đến tay bạn trong thời gian sớm nhất!
+        <strong>Đơn hàng của bạn đã được tiếp nhận.</strong><br />
+        Chúng tôi đang chuẩn bị những chiếc pizza nóng hổi và sẽ giao đến bạn sớm nhất có thể.
     </p>
 
     <div class="btn-group">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">🏠 Về trang chủ</a>
-        <a asp-controller="Orders" asp-action="MyOrders" class="btn btn-primary">📦 Xem đơn hàng của tôi</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">🏠 Tiếp tục mua sắm</a>
+        <a asp-controller="Orders" asp-action="Orders" class="btn btn-primary">📦 Xem chi tiết đơn hàng</a>
     </div>
 </div>

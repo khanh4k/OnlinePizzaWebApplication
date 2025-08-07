@@ -4,43 +4,65 @@
     ViewData["Title"] = "Chi tiết đơn hàng";
 }
 
-<div class="container my-5">
-    <div class="card shadow-lg rounded-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Thông tin đơn hàng</h3>
-        </div>
-        <div class="card-body">
+<style>
+    .order-info-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
 
-            <div class="row mb-3">
+    .order-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .order-value {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .order-details-table th,
+    .order-details-table td {
+        vertical-align: middle;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="card shadow-lg rounded-4 border-0">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3">
+            <h3 class="mb-0"><i class="fas fa-receipt me-2"></i>Chi tiết đơn hàng</h3>
+        </div>
+        <div class="card-body px-4 py-5">
+
+            <div class="row mb-4">
                 <div class="col-md-6">
-                    <strong>Họ tên:</strong> @Model.FirstName @Model.LastName<br />
-                    <strong>Email:</strong> @Model.Email<br />
-                    <strong>SĐT:</strong> @Model.PhoneNumber<br />
+                    <div class="order-info-title">🧍‍♂️ Thông tin khách hàng</div>
+                    <p class="mb-1"><span class="order-label">Họ tên:</span> <span class="order-value">@Model.FirstName @Model.LastName</span></p>
+                    <p class="mb-1"><span class="order-label">Email:</span> <span class="order-value">@Model.Email</span></p>
+                    <p class="mb-1"><span class="order-label">SĐT:</span> <span class="order-value">@Model.PhoneNumber</span></p>
                 </div>
                 <div class="col-md-6">
-                    <strong>Địa chỉ:</strong><br />
-                    @Model.AddressLine1<br />
+                    <div class="order-info-title">📍 Địa chỉ giao hàng</div>
+                    <p class="mb-1"><span class="order-value">@Model.AddressLine1</span></p>
                     @if (!string.IsNullOrEmpty(Model.AddressLine2))
                     {
-                        @Model.AddressLine2
-                    
-                        <br />
+                        <p class="mb-1"><span class="order-value">@Model.AddressLine2</span></p>
                     }
-                    @Model.City, @Model.State, @Model.ZipCode<br />
-                    @Model.Country
+                    <p class="mb-1"><span class="order-value">@Model.City, @Model.State, @Model.ZipCode</span></p>
+                    <p class="mb-1"><span class="order-value">@Model.Country</span></p>
                 </div>
             </div>
 
-            <hr />
+            <hr class="mb-4" />
 
-            <div class="mb-3">
-                <strong>Ngày đặt hàng:</strong> @Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")
+            <div class="mb-4">
+                <p><span class="order-label">📅 Ngày đặt hàng:</span> <span class="order-value">@Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")</span></p>
             </div>
 
-            <h5 class="text-secondary mt-4 mb-3">Chi tiết món ăn</h5>
+            <h5 class="text-primary mb-3">🍕 Chi tiết món ăn</h5>
 
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
+            <table class="table table-bordered table-hover order-details-table">
+                <thead class="table-light text-center">
                     <tr>
                         <th>Món</th>
                         <th>Số lượng</th>
@@ -60,7 +82,7 @@
                     @foreach (OrderDetail orderDetail in ViewBag.OrderDetailsList)
                     {
                         var subtotal = orderDetail.Amount * orderDetail.Price;
-                        <tr>
+                        <tr class="text-center">
                             <td>@orderDetail.Pizza.Name</td>
                             <td>@orderDetail.Amount</td>
                             <td>@orderDetail.Price.ToString("c")</td>
@@ -68,16 +90,18 @@
                         </tr>
                     }
                 </tbody>
-                <tfoot class="table-secondary">
+                <tfoot class="table-secondary fw-bold text-center">
                     <tr>
-                        <td colspan="3" class="text-end fw-bold">Tổng cộng:</td>
-                        <td class="fw-bold">@Model.OrderTotal.ToString("c")</td>
+                        <td colspan="3" class="text-end">Tổng cộng:</td>
+                        <td>@Model.OrderTotal.ToString("c")</td>
                     </tr>
                 </tfoot>
             </table>
 
-            <div class="mt-4">
-                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Quay lại danh sách</a>
+            <div class="text-end mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left-circle"></i> Quay lại danh sách
+                </a>
             </div>
         </div>
     </div>
