@@ -1,0 +1,19 @@
+﻿@model List<Pizzas>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center">
+        Không tìm thấy pizza phù hợp 🍕😢
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var pizza in Model)
+        {
+            <div class="col-md-4 mb-4">
+                @await Html.PartialAsync("PizzaSummary", pizza)
+            </div>
+        }
+    </div>
+}

@@ -359,3 +359,22 @@ namespace OnlinePizzaWebApplication.Controllers
         }
     }
 }
+public class PizzasController : Controller
+{
+    private readonly AppDbContext _context;
+
+    public PizzasController(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet]
+    public IActionResult Search(string searchTerm)
+    {
+        var results = _context.Pizzas
+            .Where(p => p.Name.Contains(searchTerm))
+            .ToList();
+
+        return PartialView("SearchResultsPartial", results);
+    }
+}
