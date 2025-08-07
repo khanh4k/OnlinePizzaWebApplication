@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OnlinePizzaWebApplication.Data;
 using OnlinePizzaWebApplication.Models;
 using OnlinePizzaWebApplication.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using OnlinePizzaWebApplication.ViewModels;
-using OnlinePizzaWebApplication.Data;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlinePizzaWebApplication.Controllers
 {
@@ -291,9 +293,10 @@ namespace OnlinePizzaWebApplication.Controllers
         // POST: Pizzas/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Pizzas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,ImageUrl,IsPizzaOfTheWeek,CategoriesId")] Pizzas pizzas)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,IsPizzaOfTheWeek,CategoriesId")] Pizzas pizzas, IFormFile ImageUrl)
         {
             if (id != pizzas.Id)
             {
@@ -304,6 +307,35 @@ namespace OnlinePizzaWebApplication.Controllers
             {
                 try
                 {
+                    // Xử lý upload ảnh nếu có
+                    if (ImageUrl != null && ImageUrl.Length > 0)
+                    {
+                        // Định nghĩa thư mục lưu ảnh (ví dụ: wwwroot/images/pizzas)
+                        string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/pizzas");
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+
+                        // Tạo tên file duy nhất
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageUrl.FileName);
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        // Lưu file lên server
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await ImageUrl.CopyToAsync(stream);
+                        }
+
+                        // Cập nhật ImageUrl với đường dẫn tương đối
+                        pizzas.ImageUrl = $"/images/pizzas/{uniqueFileName}";
+                    }
+                    else if (string.IsNullOrEmpty(pizzas.ImageUrl) && !string.IsNullOrEmpty(_context.Pizzas.AsNoTracking().FirstOrDefault(p => p.Id == id)?.ImageUrl))
+                    {
+                        // Giữ nguyên ImageUrl cũ nếu không upload ảnh mới
+                        pizzas.ImageUrl = _context.Pizzas.AsNoTracking().FirstOrDefault(p => p.Id == id)?.ImageUrl;
+                    }
+
                     _pizzaRepo.Update(pizzas);
                     await _pizzaRepo.SaveChangesAsync();
                 }
@@ -320,6 +352,7 @@ namespace OnlinePizzaWebApplication.Controllers
                 }
                 return RedirectToAction("Index");
             }
+
             ViewData["CategoriesId"] = new SelectList(_categoryRepo.GetAll(), "Id", "Name", pizzas.CategoriesId);
             return View(pizzas);
         }
