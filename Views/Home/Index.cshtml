@@ -74,8 +74,8 @@
 <!-- ==== Search Section ==== -->
 <section class="py-4 bg-white border-top">
     <div class="container">
-        <form id="searchForm" class="d-flex justify-content-center gap-2 mb-3" method="get">
-            <input type="text" name="searchTerm" class="form-control w-50 rounded-pill px-4" placeholder="🔍 Tìm pizza yêu thích..." />
+        <form id="searchForm" class="d-flex justify-content-center gap-2 mb-3">
+            <input type="text" name="searchTerm" id="searchInput" class="form-control w-50 rounded-pill px-4" placeholder="🔍 Tìm pizza yêu thích..." />
             <button type="submit" class="btn btn-primary rounded-pill px-4">Tìm</button>
         </form>
 
@@ -86,10 +86,8 @@
             </div>
         </div>
 
-        <!-- AJAX Search Result -->
-        <div id="searchResultsContainer">
-            @await Html.PartialAsync("SearchResultsPartial", Model)
-        </div>
+        <!-- Kết quả AJAX sẽ hiển thị ở đây -->
+        <div id="searchResultsContainer"></div>
     </div>
 </section>
 
@@ -151,33 +149,30 @@
         </div>
     </div>
 </section>
-<!-- ==== AJAX Script ==== -->
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#searchForm').on('submit', function (e) {
-                e.preventDefault();
+            <script>
+                $(document).ready(function () {
+                    $('#searchForm').submit(function (e) {
+                        e.preventDefault(); // Ngăn reload trang
 
-                const searchTerm = $('input[name="searchTerm"]').val().trim();
-                if (searchTerm === '') return;
+                        var searchTerm = $('#searchInput').val();
+                        $('#loading').show();
+                        $('#searchResultsContainer').empty();
 
-                $('#loading').show();
-
-                $.ajax({
-                    url: '/Pizzas/Search',
-                    type: 'GET',
-                    data: { searchTerm: searchTerm },
-                    success: function (result) {
-                        $('#searchResultsContainer').html(result);
-                    },
-                    error: function () {
-                        alert('Đã xảy ra lỗi khi tìm kiếm.');
-                    },
-                    complete: function () {
-                        $('#loading').hide();
-                    }
+                        $.ajax({
+                            url: '/Pizzas/Search',
+                            method: 'GET',
+                            data: { searchTerm: searchTerm },
+                            success: function (data) {
+                                $('#loading').hide();
+                                $('#searchResultsContainer').html(data);
+                            },
+                            error: function () {
+                                $('#loading').hide();
+                                $('#searchResultsContainer').html('<div class="alert alert-danger">Lỗi khi tìm pizza!</div>');
+                            }
+                        });
+                    });
                 });
-            });
-        });
-    </script>
+            </script>
 }
