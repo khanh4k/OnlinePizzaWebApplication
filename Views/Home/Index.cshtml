@@ -12,21 +12,25 @@
         animation: blinkText 1s infinite alternate;
     }
 
- {
-        opacity: 0.7;
+    
+    keyframes gradientShift {
+        0% {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+        100% {
+            background: linear-gradient(to right, #ff4b2b, #ff416c);
+        }
     }
 
+    keyframes blinkText {
+        0% {
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 
-    {
-        background: linear-gradient(to right, #ff416c, #ff4b2b);
-    }
-
-    100% {
-        background: linear-gradient(to right, #ff4b2b, #ff416c);
-    }
-
-    <style >
     .review-marquee {
         position: relative;
         height: 100px;
@@ -44,15 +48,72 @@
         background-color: #fff9f0;
     }
 
-        transform: translateX(0);
+    keyframes scrollReviews {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
     }
 
-    100% {
-        transform: translateX(-50%);
+    /* Updated Styles for Modern Search Bar with Better Contrast */
+    .search-bar {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background: linear-gradient(90deg, #ff6f61, #ff8c70); /* Gradient nhẹ nhàng hơn */
+        border-radius: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
     }
 
+    .search-bar:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        background: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        color: #333; /* Chữ đen để dễ đọc trên gradient */
+        outline: none;
+        width: 100%;
+    }
+
+    .search-input::placeholder {
+        color: #fff; /* Placeholder màu trắng nhưng trong suốt nhẹ */
+        opacity: 0.8;
+    }
+
+    .search-button {
+        background: #fff;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        color: #ff6f61; /* Màu đỏ pastel hài hòa */
+        border-radius: 0 25px 25px 0;
+        cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .search-button:hover {
+        background: #ff8c70; /* Gradient màu khi hover */
+        color: #fff;
+    }
+
+    /* Loading Spinner */
+    .spinner-border {
+        width: 2rem;
+        height: 2rem;
     }
 </style>
+
 <!-- ==== Promo Section ==== -->
 <section class="py-5 text-white text-center promo-blink" style="background: linear-gradient(to right, #ff416c, #ff4b2b);">
     <div class="container">
@@ -63,6 +124,7 @@
         </a>
     </div>
 </section>
+
 <!-- ==== Banner Section ==== -->
 <section class="text-center py-5 bg-light">
     <div class="container">
@@ -74,9 +136,9 @@
 <!-- ==== Search Section ==== -->
 <section class="py-4 bg-white border-top">
     <div class="container">
-        <form id="searchForm" class="d-flex justify-content-center gap-2 mb-3">
-            <input type="text" name="searchTerm" id="searchInput" class="form-control w-50 rounded-pill px-4" placeholder="🔍 Tìm pizza yêu thích..." />
-            <button type="submit" class="btn btn-primary rounded-pill px-4">Tìm</button>
+        <form id="searchForm" class="search-bar">
+            <input type="text" name="searchTerm" id="searchInput" class="search-input" placeholder="🔍 Tìm pizza yêu thích..." />
+            <button type="submit" class="search-button">Tìm</button>
         </form>
 
         <!-- Loading Spinner -->
@@ -97,6 +159,7 @@
         @await Component.InvokeAsync("CarouselMenu")
     </div>
 </section>
+
 <!-- ==== Why Choose Us ==== -->
 <section class="py-5 bg-light">
     <div class="container text-center">
@@ -120,13 +183,11 @@
         </div>
     </div>
 </section>
-<section class="py-5 bg-light">
-    <div class="container">
-        <h3 class="text-center mb-4 text-primary fw-bold">💬 Đánh giá từ khách hàng</h3>
+
 <!-- ==== Testimonials ==== -->
 <section class="py-5 bg-white">
     <div class="container">
-        <h2 class="text-center fw-bold mb-5"></h2>
+        <h3 class="text-center mb-4 text-primary fw-bold">💬 Đánh giá từ khách hàng</h3>
         <div class="row g-4 text-center">
             <div class="col-md-4">
                 <blockquote class="blockquote">
@@ -149,30 +210,32 @@
         </div>
     </div>
 </section>
+
 @section Scripts {
-            <script>
-                $(document).ready(function () {
-                    $('#searchForm').submit(function (e) {
-                        e.preventDefault(); // Ngăn reload trang
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchForm').submit(function (e) {
+                e.preventDefault(); // Ngăn reload trang
 
-                        var searchTerm = $('#searchInput').val();
-                        $('#loading').show();
-                        $('#searchResultsContainer').empty();
+                var searchTerm = $('#searchInput').val();
+                $('#loading').show();
+                $('#searchResultsContainer').empty();
 
-                        $.ajax({
-                            url: '/Pizzas/Search',
-                            method: 'GET',
-                            data: { searchTerm: searchTerm },
-                            success: function (data) {
-                                $('#loading').hide();
-                                $('#searchResultsContainer').html(data);
-                            },
-                            error: function () {
-                                $('#loading').hide();
-                                $('#searchResultsContainer').html('<div class="alert alert-danger">Lỗi khi tìm pizza!</div>');
-                            }
-                        });
-                    });
+                $.ajax({
+                    url: '/Pizzas/Search',
+                    method: 'GET',
+                    data: { searchTerm: searchTerm },
+                    success: function (data) {
+                        $('#loading').hide();
+                        $('#searchResultsContainer').html(data);
+                    },
+                    error: function () {
+                        $('#loading').hide();
+                        $('#searchResultsContainer').html('<div class="alert alert-danger">Lỗi khi tìm pizza!</div>');
+                    }
                 });
-            </script>
+            });
+        });
+    </script>
 }
