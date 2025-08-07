@@ -1,0 +1,53 @@
+﻿@model OnlinePizzaWebApplication.Models.UserList
+
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="DiaChi"></label>
+        <input asp-for="DiaChi" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Role">Vai trò</label>
+        <select asp-for="Role" class="form-control">
+            <option value="">-- Chọn vai trò --</option>
+            <option value="Admin" selected="@(Model.Role == "Admin" ? "selected" : null)">Admin</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Ảnh hiện tại</label><br />
+        <img src="~/images/user/@Model.Image" width="100" height="100" style="object-fit:cover;" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageFile">Thay ảnh mới</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

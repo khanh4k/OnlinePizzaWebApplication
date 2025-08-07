@@ -21,7 +21,7 @@ namespace OnlinePizzaWebApplication.Data
         public DbSet<Ingredients> Ingredients { get; set; }
         public DbSet<PizzaIngredients> PizzaIngredients { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
-        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; } 
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
 

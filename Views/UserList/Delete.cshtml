@@ -1,0 +1,16 @@
+﻿@model OnlinePizzaWebApplication.Models.UserList
+
+<h2>Xác nhận xóa người dùng</h2>
+
+<div>
+    <p>Bạn có chắc chắn muốn xóa người dùng: <strong>@Model.UserName</strong> không?</p>
+    <p>Họ tên: @Model.FullName</p>
+    <p>Email: @Model.Email</p>
+    <p>Role: @Model.Role</p>
+</div>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

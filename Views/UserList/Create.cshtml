@@ -1,0 +1,51 @@
+﻿@model OnlinePizzaWebApplication.Models.UserList
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create User</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DiaChi"></label>
+        <input asp-for="DiaChi" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Role">Vai trò</label>
+        <select asp-for="Role" class="form-control">
+            <option value="">-- Chọn vai trò --</option>
+            <option value="Admin" selected="@(Model.Role == "Admin" ? "selected" : null)">Admin</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="ImageFile">Chọn ảnh đại diện</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tạo mới</button>
+</form>

@@ -1,0 +1,17 @@
+﻿@model OnlinePizzaWebApplication.Models.UserList
+
+<h2>Thông tin chi tiết</h2>
+
+<div>
+    <img src="~/images/user/@Model.Image" width="150" height="150" style="object-fit:cover;" /><br />
+    <b>Tên đăng nhập:</b> @Model.UserName <br />
+    <b>Họ tên:</b> @Model.FullName <br />
+    <b>Email:</b> @Model.Email <br />
+    <b>Số điện thoại:</b> @Model.PhoneNumber <br />
+    <b>Địa chỉ:</b> @Model.DiaChi <br />
+    <b>Role:</b> @Model.Role <br />
+</div>
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a> |
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</p>
