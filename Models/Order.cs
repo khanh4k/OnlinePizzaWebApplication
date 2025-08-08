@@ -83,5 +83,14 @@ namespace OnlinePizzaWebApplication.Models
         public string UserId { get; set; }
 
         public IdentityUser User { get; set; }
+     
+        public int Id { get; set; }
+
+        // Sửa từ "object" thành DateTime? (hoặc DateTime nếu bắt buộc)
+        public DateTime? OrderDate { get; set; }
+
+        public decimal TotalAmount { get; set; }
+
+        public string OrderType { get; set; }
     }
 }

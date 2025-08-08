@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "📊 Thống kê đơn hàng";
+    var labels = ViewBag.Labels as string[];
+    var orderCounts = ViewBag.OrderCounts as int[];
+    var revenues = ViewBag.Revenues as decimal[];
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 fw-bold text-primary">📊 Thống kê đơn hàng</h2>
+
+    <!-- Bộ lọc -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-2">
+            <input type="number" name="month" class="form-control" placeholder="Tháng" />
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="year" class="form-control" placeholder="Năm" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="type" class="form-control" placeholder="Loại đơn hàng" />
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">Lọc</button>
+        </div>
+    </form>
+
+    <!-- Thống kê nhanh -->
+    <div class="row text-center mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng số đơn</h5>
+                    <h3 class="text-primary fw-bold">@ViewBag.TotalOrders</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-success">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng doanh thu</h5>
+                    <h3 class="text-success fw-bold">@ViewBag.TotalRevenue.ToString("N0") ₫</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ -->
+    <canvas id="statsChart" height="120"></canvas>
+
+    <!-- Bảng chi tiết -->
+    <table class="table table-bordered table-striped mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Ngày</th>
+                <th>Số đơn</th>
+                <th>Doanh thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < labels.Length; i++)
+            {
+                <tr>
+                    <td>@labels[i]</td>
+                    <td>@orderCounts[i]</td>
+                    <td>@revenues[i].ToString("N0") ₫</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('statsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels)),
+            datasets: [
+                {
+                    label: 'Số đơn',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(orderCounts)),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.3)',
+                    yAxisID: 'y1'
+                },
+                {
+                    label: 'Doanh thu',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(revenues)),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                    yAxisID: 'y2'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            stacked: false,
+            scales: {
+                y1: {
+                    type: 'linear',
+                    position: 'left',
+                    beginAtZero: true,
+                    title: { display: true, text: 'Số đơn' }
+                },
+                y2: {
+                    type: 'linear',
+                    position: 'right',
+                    beginAtZero: true,
+                    title: { display: true, text: 'Doanh thu (₫)' },
+                    ticks: {
+                        callback: value => value.toLocaleString() + ' ₫'
+                    }
+                }
+            }
+        }
+    });
+</script>
