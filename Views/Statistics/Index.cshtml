@@ -1,11 +1,9 @@
 ﻿@{
     ViewData["Title"] = "📊 Thống kê đơn hàng";
-    var labels = ViewBag.Labels as string[];
-    var orderCounts = ViewBag.OrderCounts as int[];
-    var revenues = ViewBag.Revenues as decimal[];
-    var pizzaNames = ViewBag.PizzaNames as List<string>;
-    var months = ViewBag.Months as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
-    var years = ViewBag.Years as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    var labels = ViewBag.Labels as string[] ?? new string[0];
+    var orderCounts = ViewBag.OrderCounts as int[] ?? new int[0];
+    var revenues = ViewBag.Revenues as decimal[] ?? new decimal[0];
+    var pizzaNames = ViewBag.PizzaNames as List<string> ?? new List<string>();
 }
 
 <div class="container my-5">
@@ -13,23 +11,22 @@
 
     <!-- Bộ lọc -->
     <form method="get" class="row g-3 mb-4">
-        <div class="col-md-2">
-            <select name="month" class="form-control" asp-items="months">
-                <option value="">Chọn tháng</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="year" class="form-control" asp-items="years">
-                <option value="">Chọn năm</option>
-            </select>
+        <div class="col-md-3">
+            <label for="startDate">Thời gian bắt đầu:</label>
+            <input type="date" name="startDate" id="startDate" class="form-control" value="@(ViewContext.ModelState["startDate"]?.AttemptedValue ?? "")" />
         </div>
         <div class="col-md-3">
+            <label for="endDate">Thời gian kết thúc:</label>
+            <input type="date" name="endDate" id="endDate" class="form-control" value="@(ViewContext.ModelState["endDate"]?.AttemptedValue ?? "")" />
+        </div>
+        <div class="col-md-3">
+            <label for="type">Loại pizza:</label>
             <select name="type" class="form-control" asp-items="@(new SelectList(pizzaNames))">
                 <option value="">Chọn loại pizza đã đặt</option>
             </select>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-primary w-100">Lọc</button>
+            <button type="submit" class="btn btn-primary w-100 mt-4">Lọc</button>
         </div>
     </form>
 
@@ -78,27 +75,45 @@
     </table>
 </div>
 
+<!-- Thêm thư viện chartjs-plugin-datalabels -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script>
     var ctx = document.getElementById('statsChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels ?? new string[0])),
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels)),
             datasets: [
                 {
                     label: 'Số đơn',
-                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(orderCounts ?? new int[0])),
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(orderCounts)),
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.3)',
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        formatter: function(value) {
+                            return value; // Hiển thị giá trị số đơn
+                        }
+                    }
                 },
                 {
                     label: 'Doanh thu',
-                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(revenues ?? new decimal[0])),
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(revenues)),
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.3)',
-                    yAxisID: 'y2'
+                    yAxisID: 'y2',
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        formatter: function(value) {
+                            return value.toLocaleString() + ' ₫'; // Hiển thị doanh thu với định dạng tiền
+                        }
+                    }
                 }
             ]
         },
@@ -106,6 +121,11 @@
             responsive: true,
             interaction: { mode: 'index', intersect: false },
             stacked: false,
+            plugins: {
+                datalabels: {
+                    display: true
+                }
+            },
             scales: {
                 y1: {
                     type: 'linear',
@@ -123,6 +143,9 @@
                     }
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels] // Đăng ký plugin
     });
+    // Định nghĩa ChartDataLabels để tránh lỗi
+    var ChartDataLabels = window['chartjs-plugin-datalabels'];
 </script>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlinePizzaWebApplication.Data;
-using Microsoft.AspNetCore.Mvc.Rendering; // Thêm namespace này
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace OnlinePizzaWebApplication.Controllers
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IActionResult> Index(int? month, int? year, string type)
+        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string type)
         {
             if (_context == null)
             {
@@ -30,13 +30,15 @@ namespace OnlinePizzaWebApplication.Controllers
             // Lọc bỏ đơn có ngày đặt hoặc tổng tiền null
             orders = orders.Where(o => o.OrderPlaced != null && o.OrderTotal != null);
 
-            // Lọc theo năm
-            if (year.HasValue)
-                orders = orders.Where(o => o.OrderPlaced.Year == year.Value);
-
-            // Lọc theo tháng
-            if (month.HasValue)
-                orders = orders.Where(o => o.OrderPlaced.Month == month.Value);
+            // Lọc theo khoảng thời gian
+            if (startDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderPlaced >= startDate.Value.Date);
+            }
+            if (endDate.HasValue)
+            {
+                orders = orders.Where(o => o.OrderPlaced <= endDate.Value.Date.AddDays(1).AddTicks(-1)); // Đến hết ngày kết thúc
+            }
 
             // Lấy danh sách OrderId liên quan đến Pizza đã chọn
             var orderIds = new List<int>();
@@ -89,21 +91,9 @@ namespace OnlinePizzaWebApplication.Controllers
                 .ToListAsync();
             ViewBag.PizzaNames = orderedPizzaNames;
 
-            // Chuẩn bị danh sách tháng (1-12)
-            var months = Enumerable.Range(1, 12).Select(m => new SelectListItem { Value = m.ToString(), Text = m.ToString("D2") }).ToList();
-            ViewBag.Months = months;
-
-            // Chuẩn bị danh sách năm (dựa trên dữ liệu OrderPlaced, nếu rỗng thì dùng 2020-2025)
-            var yearsFromData = (await _context.Orders
-                .Where(o => o.OrderPlaced != null)
-                .Select(o => o.OrderPlaced.Year)
-                .Distinct()
-                .ToListAsync())
-                .OrderBy(y => y)
-                .Select(y => new SelectListItem { Value = y.ToString(), Text = y.ToString() })
-                .ToList();
-            var years = yearsFromData.Any() ? yearsFromData : Enumerable.Range(2020, 6).Select(y => new SelectListItem { Value = y.ToString(), Text = y.ToString() }).ToList();
-            ViewBag.Years = years;
+            // Chuẩn bị danh sách tháng (1-12) - không cần nữa vì dùng date picker
+            // var months = Enumerable.Range(1, 12).Select(m => new SelectListItem { Value = m.ToString(), Text = m.ToString("D2") }).ToList();
+            // ViewBag.Months = months;
 
             // Chuẩn bị dữ liệu cho view
             ViewBag.TotalOrders = totalOrders;
