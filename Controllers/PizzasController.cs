@@ -249,6 +249,7 @@ namespace OnlinePizzaWebApplication.Controllers
         }
 
         // GET: Pizzas/Create
+        // GET: Pizzas/Create
         public IActionResult Create()
         {
             ViewData["CategoriesId"] = new SelectList(_categoryRepo.GetAll(), "Id", "Name");
@@ -256,22 +257,32 @@ namespace OnlinePizzaWebApplication.Controllers
         }
 
         // POST: Pizzas/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,Description,ImageUrl,IsPizzaOfTheWeek,CategoriesId")] Pizzas pizzas)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,Description,ImageUrl,IsPizzaOfTheWeek,CategoriesId")] Pizzas pizzas, IFormFile ImageUrl)
         {
             if (ModelState.IsValid)
             {
+                if (ImageUrl != null && ImageUrl.Length > 0)
+                {
+                    // Lưu file ảnh vào thư mục (ví dụ: wwwroot/images)
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", Guid.NewGuid().ToString() + Path.GetExtension(ImageUrl.FileName));
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageUrl.CopyToAsync(stream);
+                    }
+                    // Lưu đường dẫn tương đối vào ImageUrl
+                    pizzas.ImageUrl = "/images/" + Path.GetFileName(filePath);
+                }
+
                 _pizzaRepo.Add(pizzas);
                 await _pizzaRepo.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
+
             ViewData["CategoriesId"] = new SelectList(_categoryRepo.GetAll(), "Id", "Name", pizzas.CategoriesId);
             return View(pizzas);
         }
-
         // GET: Pizzas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

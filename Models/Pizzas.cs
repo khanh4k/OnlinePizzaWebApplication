@@ -24,7 +24,7 @@ namespace OnlinePizzaWebApplication.Models
         [Required]
         public string Name { get; set; }
 
-        [Range(0, 1000)]
+        [Range(0, 1000000)]
         [DataType(DataType.Currency)]
         [Required]
         [Precision(18, 2)]

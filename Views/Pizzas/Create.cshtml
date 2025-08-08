@@ -1,4 +1,4 @@
-@model Pizzas
+@model OnlinePizzaWebApplication.Models.Pizzas
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +6,7 @@
 
 <h2>Create</h2>
 
-<form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data" method="post">
     <div class="form-horizontal">
         <h4>Pizzas</h4>
         <hr />
@@ -33,9 +33,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ImageUrl" class="col-md-2 control-label"></label>
+            <label asp-for="ImageUrl" class="col-md-2 control-label">Upload Image</label>
             <div class="col-md-10">
-                <input asp-for="ImageUrl" class="form-control" />
+                <input asp-for="ImageUrl" type="file" class="form-control-file" accept="image/*" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="form-group">
             <label asp-for="CategoriesId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="CategoriesId" class ="form-control" asp-items="ViewBag.CategoriesId"></select>
+                <select asp-for="CategoriesId" class="form-control" asp-items="ViewBag.CategoriesId"></select>
             </div>
         </div>
         <div class="form-group">
@@ -67,7 +67,8 @@
     </div>
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
