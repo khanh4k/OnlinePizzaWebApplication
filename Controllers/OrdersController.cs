@@ -68,11 +68,27 @@ namespace OnlinePizzaWebApplication.Controllers
                 order.OrderTotal = _shoppingCart.ShoppingCartItems.Sum(item => item.Pizza.Price * item.Amount);
                 order.Status = "Pending COD";
 
+                // Lưu Order
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                ViewBag.CheckoutCompleteMessage = $"Thanks for your order {order.OrderId}! We'll deliver your pizzas soon!";
-                return View("CheckoutComplete");
+                // Lưu OrderDetails
+                foreach (var item in _shoppingCart.ShoppingCartItems)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        PizzaId = item.Pizza.Id,
+                        Amount = item.Amount,
+                        Price = item.Pizza.Price,
+                        Order = order
+                    };
+                    _context.OrderDetails.Add(orderDetail);
+                }
+                await _context.SaveChangesAsync();
+
+                await _shoppingCart.ClearCartAsync();
+                return RedirectToAction("CheckoutComplete", new { orderId = order.OrderId }); // Thay đổi chuyển hướng sang CheckoutComplete
             }
 
             return View(order);
@@ -109,6 +125,21 @@ namespace OnlinePizzaWebApplication.Controllers
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
+
+            // Lưu OrderDetails
+            foreach (var item in _shoppingCart.ShoppingCartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    PizzaId = item.Pizza.Id,
+                    Amount = item.Amount,
+                    Price = item.Pizza.Price,
+                    Order = order
+                };
+                _context.OrderDetails.Add(orderDetail);
+            }
+            await _context.SaveChangesAsync(); // Đảm bảo lưu OrderDetails
 
             // Tạo yêu cầu thanh toán VNPay
             var vnPayModel = new VnPaymentRequestModel
@@ -149,8 +180,14 @@ namespace OnlinePizzaWebApplication.Controllers
                     if (order != null)
                     {
                         order.Status = "Paid VNPay";
-                        order.OrderTotal = decimal.Parse(vnp_Amount) / 100;
+                        order.OrderTotal = decimal.Parse(vnp_Amount) / 100; // Chuyển đổi từ VND (phân) sang tiền tệ
                         await _context.SaveChangesAsync();
+
+                        // Debug: Kiểm tra OrderDetails
+                        var orderDetails = await _context.OrderDetails
+                            .Where(od => od.OrderId == orderId)
+                            .ToListAsync();
+                        Console.WriteLine($"OrderDetails count for OrderId {orderId}: {orderDetails.Count}");
                     }
                 }
                 ViewBag.CheckoutCompleteMessage = "Thanks for your order! Payment VNPay was successful. We'll deliver your pizzas soon!";
@@ -185,15 +222,21 @@ namespace OnlinePizzaWebApplication.Controllers
 
         // GET: Orders/Details/5
         [Authorize]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == 0)
+            if (id == null)
             {
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(HttpContext.User);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
             var orders = await _context.Orders.Include(o => o.OrderLines).Include(o => o.User)
-                .SingleOrDefaultAsync(m => m.OrderId == id);
+    .SingleOrDefaultAsync(m => m.OrderId == id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userRoles = await _userManager.GetRolesAsync(user);
             bool isAdmin = userRoles.Any(r => r == "Admin");
@@ -205,17 +248,27 @@ namespace OnlinePizzaWebApplication.Controllers
 
             if (!isAdmin)
             {
-                var userId = _userManager.GetUserId(HttpContext.User);
+                var userid = _userManager.GetUserId(HttpContext.User);
                 if (orders.UserId != userId)
                 {
                     return BadRequest("You do not have permissions to view this order.");
                 }
             }
 
-            var orderDetailsList = _context.OrderDetails.Include(o => o.Pizza).Include(o => o.Order)
-                .Where(x => x.OrderId == orders.OrderId);
+            var orderDetailsList = await _context.OrderDetails
+                .Include(od => od.Pizza)
+                .Include(od => od.Order)
+                .Where(od => od.OrderId == id.Value)
+                .ToListAsync();
 
-            ViewBag.OrderDetailsList = orderDetailsList;
+            if (orderDetailsList == null || !orderDetailsList.Any())
+            {
+                ViewBag.OrderDetailsList = new List<OrderDetail>(); // Gán danh sách rỗng thay vì null
+            }
+            else
+            {
+                ViewBag.OrderDetailsList = orderDetailsList;
+            }
 
             return View(orders);
         }

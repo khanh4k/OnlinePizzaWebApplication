@@ -56,7 +56,7 @@
             <hr class="mb-4" />
 
             <div class="mb-4">
-                <p><span class="order-label">📅 Ngày đặt hàng:</span> <span class="order-value">@Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")</span></p>
+                <p class="mb-1"><span class="order-label">Ngày đặt hàng:</span> <span class="order-value">@Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")</span></p>
             </div>
 
             <h5 class="text-primary mb-3">🍕 Chi tiết món ăn</h5>
@@ -71,23 +71,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
+                    @if (ViewBag.OrderDetailsList == null || !((IEnumerable<OrderDetail>)ViewBag.OrderDetailsList).Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-danger">Không có chi tiết đơn hàng.</td>
+                        </tr>
+                    }
+                    else
+                    {
                         decimal total = 0M;
-                        foreach (OrderDetail orderDetail in ViewBag.OrderDetailsList)
+                        foreach (OrderDetail orderDetail in (IEnumerable<OrderDetail>)ViewBag.OrderDetailsList)
                         {
                             var subtotal = orderDetail.Amount * orderDetail.Price;
                             total += subtotal;
                         }
-                    }
-                    @foreach (OrderDetail orderDetail in ViewBag.OrderDetailsList)
-                    {
-                        var subtotal = orderDetail.Amount * orderDetail.Price;
-                        <tr class="text-center">
-                            <td>@orderDetail.Pizza.Name</td>
-                            <td>@orderDetail.Amount</td>
-                            <td>@orderDetail.Price.ToString("c")</td>
-                            <td>@subtotal.ToString("c")</td>
-                        </tr>
+                        foreach (OrderDetail orderDetail in (IEnumerable<OrderDetail>)ViewBag.OrderDetailsList)
+                        {
+                            var subtotal = orderDetail.Amount * orderDetail.Price;
+                            <tr class="text-center">
+                                <td>@orderDetail.Pizza.Name</td>
+                                <td>@orderDetail.Amount</td>
+                                <td>@orderDetail.Price.ToString("c")</td>
+                                <td>@subtotal.ToString("c")</td>
+                            </tr>
+                        }
                     }
                 </tbody>
                 <tfoot class="table-secondary fw-bold text-center">
