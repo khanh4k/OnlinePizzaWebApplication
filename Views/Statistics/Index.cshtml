@@ -3,6 +3,9 @@
     var labels = ViewBag.Labels as string[];
     var orderCounts = ViewBag.OrderCounts as int[];
     var revenues = ViewBag.Revenues as decimal[];
+    var pizzaNames = ViewBag.PizzaNames as List<string>;
+    var months = ViewBag.Months as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    var years = ViewBag.Years as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
 }
 
 <div class="container my-5">
@@ -11,13 +14,19 @@
     <!-- Bộ lọc -->
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-2">
-            <input type="number" name="month" class="form-control" placeholder="Tháng" />
+            <select name="month" class="form-control" asp-items="months">
+                <option value="">Chọn tháng</option>
+            </select>
         </div>
         <div class="col-md-2">
-            <input type="number" name="year" class="form-control" placeholder="Năm" />
+            <select name="year" class="form-control" asp-items="years">
+                <option value="">Chọn năm</option>
+            </select>
         </div>
         <div class="col-md-3">
-            <input type="text" name="type" class="form-control" placeholder="Loại đơn hàng" />
+            <select name="type" class="form-control" asp-items="@(new SelectList(pizzaNames))">
+                <option value="">Chọn loại pizza đã đặt</option>
+            </select>
         </div>
         <div class="col-md-2">
             <button class="btn btn-primary w-100">Lọc</button>
@@ -75,18 +84,18 @@
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels)),
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels ?? new string[0])),
             datasets: [
                 {
                     label: 'Số đơn',
-                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(orderCounts)),
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(orderCounts ?? new int[0])),
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.3)',
                     yAxisID: 'y1'
                 },
                 {
                     label: 'Doanh thu',
-                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(revenues)),
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(revenues ?? new decimal[0])),
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.3)',
                     yAxisID: 'y2'
