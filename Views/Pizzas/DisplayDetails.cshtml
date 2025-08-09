@@ -1,4 +1,4 @@
-@model Pizzas
+﻿@model Pizzas
 
 @{
     var ModelName = "Pizza Details";
@@ -89,12 +89,79 @@
         }
 
         </p>
-        <p>
-            <h4>
-                <a asp-controller="Reviews" asp-action="PizzaReviews" asp-route-pizzaId="@Model.Id">Reviews</a>
-            </h4>
-        </p>
-        </div>
+            <h3>Customer Reviews</h3>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <form asp-action="CreateWithPizza" asp-controller="Reviews" method="post">
+                                <input type="hidden" name="PizzaId" value="@Model.Id" />
+
+                                <div class="mb-3">
+                                    <label for="Title" class="form-label fw-bold">Review Title</label>
+                                    <input name="Title" id="Title" class="form-control" placeholder="Enter your review title" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="Description" class="form-label fw-bold">Description</label>
+                                    <textarea name="Description" id="Description" class="form-control" rows="3" placeholder="Write your detailed feedback" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="Grade" class="form-label fw-bold">Rating</label>
+                                    <select name="Grade" id="Grade" class="form-select" required>
+                                        <option value="">-- Select rating --</option>
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <option value="@i">@i Star@(i > 1 ? "s" : "")</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-check-circle"></i> Submit Review
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Hiển thị danh sách review -->
+            @if (ViewBag.Reviews != null && ((List<Reviews>)ViewBag.Reviews).Count > 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Grade</th>
+                            <th>Date</th>
+                            <th>Pizza</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in (List<Reviews>)ViewBag.Reviews)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Grade</td>
+                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Pizza.Name</td>
+                                <td>@item.User?.Email</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No reviews found for this pizza.</p>
+            }
+
 
         <br />
         <p class="button">

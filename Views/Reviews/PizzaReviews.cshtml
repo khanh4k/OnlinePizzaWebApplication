@@ -1,68 +1,38 @@
-@model IEnumerable<Reviews>
-
-@{
-    ViewData["Title"] = "PizzaReviews";
-}
-
-<h2>Reviews for the Pizza: @ViewBag.PizzaName</h2>
-
-<h4>
-    <a asp-controller="Pizzas" asp-action="DisplayDetails"
-       asp-route-id="@ViewBag.PizzaId">Back to  @ViewBag.PizzaName</a>
-</h4>
+<h3>Customer Reviews</h3>
 
 <p>
-    <a asp-action="CreateWithPizza" asp-route-pizzaId="@ViewBag.PizzaId" class="btn btn-success">Create New Review</a>
+    <a asp-action="CreateWithPizza" asp-controller="Reviews" asp-route-pizzaId="@Model.Id" class="btn btn-success">Create New Review</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Grade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pizza)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pizza.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                
-        </tr>
+@if (ViewBag.Reviews != null && ((List<Reviews>)ViewBag.Reviews).Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Grade</th>
+                <th>Date</th>
+                <th>Pizza</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in (List<Reviews>)ViewBag.Reviews)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.Grade</td>
+                    <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Pizza.Name</td>
+                    <td>@item.User?.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <p>No reviews found for this pizza.</p>
+}

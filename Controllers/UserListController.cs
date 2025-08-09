@@ -42,7 +42,7 @@ namespace OnlinePizzaWebApplication.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View(new UserList());
         }
 
         [HttpPost]
