@@ -1,19 +1,196 @@
-@model IEnumerable<Pizzas>
-
+﻿@model IEnumerable<Pizzas>
 @{
     var pageName = ViewBag.CurrentCategory;
     ViewData["Title"] = pageName;
 }
 
-<h2>@pageName</h2>
-<hr />
-
-
-<div id="PizzaSummaryId" class="card-container">
-    @foreach (var pizza in Model)
-    {
-        @await Html.PartialAsync("PizzaSummary", pizza)
+<style>
+    /* General Layout */
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
     }
-</div>
 
-<br />
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Category Header */
+    .category-header {
+        margin: 30px 0;
+        text-align: center;
+    }
+
+        .category-header h2 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+    /* Pizza Grid - Tương tự như pizza menu */
+    #PizzaSummaryId {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+        padding: 0 10px;
+    }
+
+    /* Responsive breakpoints */
+    @@media (min-width: 768px) and (max-width: 1023px) {
+        #PizzaSummaryId
+
+    {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    }
+
+    @@media (min-width: 1024px) {
+        #PizzaSummaryId
+
+    {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 28px;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+
+    }
+
+    @@media (max-width: 767px) {
+        #PizzaSummaryId
+
+    {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 5px;
+    }
+
+    .card-container {
+        max-width: 100%;
+    }
+
+    }
+
+    /* Card Style - Giống hệt pizza menu */
+    .card-container {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        min-height: 380px;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        .card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Pizza title - Căn trái */
+        .card-container h4 {
+            font-size: 18px;
+            margin: 10px 0 8px 0;
+            text-align: left !important;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: 600;
+        }
+
+        /* Description - Căn trái và sử dụng hết chiều rộng */
+        .card-container p {
+            flex-grow: 1;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+            text-align: left !important;
+            margin-bottom: 12px;
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal !important;
+        }
+
+        /* Price styling - Căn trái */
+        .card-container .price {
+            font-weight: bold;
+            font-size: 16px;
+            color: #e74c3c;
+            text-align: left !important;
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Override Bootstrap và CSS khác có thể giới hạn width */
+        .card-container * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .card-container .col-*,
+        .card-container .container,
+        .card-container .container-fluid,
+        .card-container div[class*="col-"],
+        .card-container div[class*="w-"] {
+            width: 100% !important;
+            max-width: none !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Force cho tất cả text elements trong card */
+        .card-container p,
+        .card-container div,
+        .card-container span {
+            width: 100% !important;
+            max-width: none !important;
+            display: block !important;
+        }
+
+    /* Styling cho hr */
+    hr {
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="container">
+    <div class="category-header">
+        <h2>@pageName</h2>
+        <hr />
+    </div>
+
+    <!-- Pizza List Grid -->
+    <div id="PizzaSummaryId">
+        @foreach (var pizza in Model)
+        {
+            <div class="card-container">
+                @await Html.PartialAsync("PizzaSummary", pizza)
+            </div>
+        }
+    </div>
+    <br />
+</div>
