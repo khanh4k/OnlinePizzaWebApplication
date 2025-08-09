@@ -40,6 +40,24 @@
                     <p class="mb-1"><span class="order-label">Họ tên:</span> <span class="order-value">@Model.FirstName @Model.LastName</span></p>
                     <p class="mb-1"><span class="order-label">Email:</span> <span class="order-value">@Model.Email</span></p>
                     <p class="mb-1"><span class="order-label">SĐT:</span> <span class="order-value">@Model.PhoneNumber</span></p>
+                    <!-- Thêm phần hiển thị trạng thái -->
+                    <p class="mb-1">
+                        <span class="order-label">Trạng thái:</span>
+                        <span class="order-value">
+                            @if (Model.Status == "Pending COD")
+                            {
+                                @:đã thanh toán bằng tiền mặt
+                            }
+                            else if (Model.Status == "Pending Payment")
+                            {
+                                @:đã thanh toán bằng VnPay
+                            }
+                            else
+                            {
+                                @:đang chờ xử lý
+                            }
+                        </span>
+                    </p>
                 </div>
                 <div class="col-md-6">
                     <div class="order-info-title">📍 Địa chỉ giao hàng</div>
@@ -53,20 +71,13 @@
                 </div>
             </div>
 
-            <hr class="mb-4" />
-
-            <div class="mb-4">
-                <p class="mb-1"><span class="order-label">Ngày đặt hàng:</span> <span class="order-value">@Model.OrderPlaced.ToString("dd/MM/yyyy HH:mm")</span></p>
-            </div>
-
-            <h5 class="text-primary mb-3">🍕 Chi tiết món ăn</h5>
-
-            <table class="table table-bordered table-hover order-details-table">
-                <thead class="table-light text-center">
+            <div class="order-info-title">📦 Chi tiết đơn hàng</div>
+            <table class="table table-hover order-details-table">
+                <thead class="table-primary text-center">
                     <tr>
-                        <th>Món</th>
+                        <th>Tên pizza</th>
                         <th>Số lượng</th>
-                        <th>Giá</th>
+                        <th>Đơn giá</th>
                         <th>Thành tiền</th>
                     </tr>
                 </thead>
