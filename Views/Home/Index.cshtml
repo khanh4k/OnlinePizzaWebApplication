@@ -1,9 +1,12 @@
-﻿@model IEnumerable<Pizzas>
+﻿@model IEnumerable<OnlinePizzaWebApplication.Models.Pizzas>
 
 @{
     ViewData["Title"] = "Home Page";
 }
+
+<!-- CSS tùy chỉnh -->
 <style>
+    /* Animations */
     .promo-blink {
         animation: gradientShift 8s ease infinite alternate;
     }
@@ -12,25 +15,34 @@
         animation: blinkText 1s infinite alternate;
     }
 
-    
-    keyframes gradientShift {
-        0% {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-        }
-        100% {
-            background: linear-gradient(to right, #ff4b2b, #ff416c);
-        }
+    /* Animation Definitions */
+    @@keyframes gradientShift {
+        0%
+
+    {
+        background: linear-gradient(to right, #ff6f61, #ff8c70);
     }
 
-    keyframes blinkText {
-        0% {
-            opacity: 0.7;
-        }
-        100% {
-            opacity: 1;
-        }
+    100% {
+        background: linear-gradient(to right, #ff8c70, #ff6f61);
     }
 
+    }
+
+    @@keyframes blinkText {
+        0%
+
+    {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+    }
+
+    /* Review Marquee */
     .review-marquee {
         position: relative;
         height: 100px;
@@ -48,13 +60,17 @@
         background-color: #fff9f0;
     }
 
-    keyframes scrollReviews {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
+    @@keyframes scrollReviews {
+        0%
+
+    {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+
     }
 
     /* Updated Styles for Modern Search Bar with Better Contrast */
@@ -64,16 +80,16 @@
         width: 100%;
         max-width: 600px;
         margin: 0 auto;
-        background: linear-gradient(90deg, #ff6f61, #ff8c70); /* Gradient nhẹ nhàng hơn */
+        background: linear-gradient(90deg, #ff6f61, #ff8c70);
         border-radius: 25px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         transition: box-shadow 0.3s ease;
     }
 
-    .search-bar:hover {
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
+        .search-bar:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
 
     .search-input {
         flex: 1;
@@ -81,49 +97,145 @@
         background: none;
         padding: 12px 20px;
         font-size: 16px;
-        color: #333; /* Chữ đen để dễ đọc trên gradient */
+        color: #333;
         outline: none;
         width: 100%;
     }
 
-    .search-input::placeholder {
-        color: #fff; /* Placeholder màu trắng nhưng trong suốt nhẹ */
-        opacity: 0.8;
-    }
+        .search-input::placeholder {
+            color: #fff;
+            opacity: 0.8;
+        }
 
     .search-button {
         background: #fff;
         border: none;
         padding: 12px 20px;
         font-size: 16px;
-        color: #ff6f61; /* Màu đỏ pastel hài hòa */
+        color: #ff6f61;
         border-radius: 0 25px 25px 0;
         cursor: pointer;
         transition: background 0.3s ease, color 0.3s ease;
     }
 
-    .search-button:hover {
-        background: #ff8c70; /* Gradient màu khi hover */
-        color: #fff;
-    }
+        .search-button:hover {
+            background: #ff8c70;
+            color: #fff;
+        }
 
     /* Loading Spinner */
     .spinner-border {
         width: 2rem;
         height: 2rem;
     }
+
+    /* Promo Section */
+    
+    /* Animation */
+    @@keyframes gradientShift {
+        0%
+
+    {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+
+    }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .promo-section {
+        background: linear-gradient(270deg, #ff6f61, #ff8c70, #ff6f61);
+        background-size: 400% 400%;
+        animation: gradientShift 10s ease infinite;
+        padding: 40px 20px; /* giảm từ 80px xuống 40px */
+        color: #fff;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px; /* giảm từ 300px xuống 200px */
+        position: relative;
+        overflow: hidden;
+    }
+
+        .promo-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/images/pizza-bg.jpg') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+    .promo-content {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        animation: fadeUp 1s ease forwards;
+    }
+
+    .promo-section h2 {
+        font-family: inherit;
+        font-size: 2rem; /* giảm một chút để hợp với chiều cao mới */
+        font-weight: 800;
+        margin-bottom: 0.8rem;
+        line-height: 1.3;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+
+
+
+    .promo-section p {
+        font-size: 1rem; /* giảm nhẹ */
+        margin-bottom: 1.5rem;
+        opacity: 0.95;
+    }
+
+    .promo-section .btn {
+        background: #fff;
+        color: #ff6f61;
+        border-radius: 30px;
+        padding: 14px 36px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+        .promo-section .btn:hover {
+            background: #ffe4e1;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(255, 111, 97, 0.4);
+        }
 </style>
 
-<!-- ==== Promo Section ==== -->
-<section class="py-5 text-white text-center promo-blink" style="background: linear-gradient(to right, #ff416c, #ff4b2b);">
-    <div class="container">
-        <h2 class="fw-bold mb-3 animate-blink">🎁 Ưu đãi hấp dẫn trong tuần!</h2>
-        <p class="lead">Mua 1 tặng 1 cho tất cả pizza size L từ Thứ Hai đến Thứ Sáu.</p>
-        <a href="/Pizzas/ListAll" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm mt-3">
+<section class="promo-section">
+    <div class="promo-content">
+        <h2>🎁 Ưu đãi hấp dẫn trong tuần!</h2>
+        <p>Mua 1 tặng 1 cho tất cả pizza size L từ Thứ Hai đến Thứ Sáu.</p>
+        <a href="/Pizzas/ListAll" class="btn">
             👉 Xem thực đơn ngay
         </a>
     </div>
 </section>
+
 
 <!-- ==== Banner Section ==== -->
 <section class="text-center py-5 bg-light">
@@ -160,56 +272,86 @@
     </div>
 </section>
 
-<!-- ==== Why Choose Us ==== -->
-<section class="py-5 bg-light">
+<!-- ==== Why Choose Us (Minimal Modern) ==== -->
+<section class="py-5" style="background:#fff;">
     <div class="container text-center">
-        <h2 class="fw-bold mb-5">🌟 Tại sao chọn chúng tôi?</h2>
+        <h2 class="fw-bold mb-5" style="color:#d35400;">🌟 Tại sao chọn chúng tôi?</h2>
         <div class="row g-4">
             <div class="col-md-4">
-                <i class="fas fa-shipping-fast fa-3x text-danger mb-3"></i>
-                <h5 class="fw-bold">Giao hàng nhanh</h5>
-                <p class="text-muted">Pizza nóng hổi trong vòng 30 phút.</p>
+                <div class="p-4 rounded-4 shadow-sm feature-card bg-white h-100">
+                    <i class="fas fa-shipping-fast fa-2x mb-3" style="color:#e74c3c;"></i>
+                    <h5 class="fw-bold">Giao hàng nhanh</h5>
+                    <p class="text-muted small">Pizza nóng hổi đến tay bạn chỉ trong 30 phút.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <i class="fas fa-pizza-slice fa-3x text-danger mb-3"></i>
-                <h5 class="fw-bold">Chất lượng tuyệt hảo</h5>
-                <p class="text-muted">Nguyên liệu 100% tươi mới, hương vị khó quên.</p>
+                <div class="p-4 rounded-4 shadow-sm feature-card bg-white h-100">
+                    <i class="fas fa-pizza-slice fa-2x mb-3" style="color:#f39c12;"></i>
+                    <h5 class="fw-bold">Nguyên liệu tươi</h5>
+                    <p class="text-muted small">100% nguyên liệu fresh, chế biến mới mỗi ngày.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <i class="fas fa-heart fa-3x text-danger mb-3"></i>
-                <h5 class="fw-bold">Khách hàng là trung tâm</h5>
-                <p class="text-muted">Sự hài lòng của bạn là ưu tiên số 1.</p>
+                <div class="p-4 rounded-4 shadow-sm feature-card bg-white h-100">
+                    <i class="fas fa-heart fa-2x mb-3" style="color:#e84393;"></i>
+                    <h5 class="fw-bold">Khách hàng là số 1</h5>
+                    <p class="text-muted small">Luôn lắng nghe và phục vụ tận tâm như gia đình.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ==== Testimonials ==== -->
-<section class="py-5 bg-white">
+<!-- ==== Testimonials (Clean Modern) ==== -->
+<section class="py-5" style="background:#fffaf3;">
     <div class="container">
-        <h3 class="text-center mb-4 text-primary fw-bold">💬 Đánh giá từ khách hàng</h3>
-        <div class="row g-4 text-center">
+        <h3 class="text-center mb-5 fw-bold" style="color:#c0392b;">💬 Khách hàng nói gì</h3>
+        <div class="row g-4">
             <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0 fst-italic">"Pizza ở đây thực sự tuyệt vời! Tôi đã thử nhiều nơi và đây là số 1."</p>
-                    <footer class="blockquote-footer mt-2">Hải, Hà Nội</footer>
-                </blockquote>
+                <div class="p-4 rounded-4 shadow-sm review-card h-100 bg-white">
+                    <p class="fst-italic">"Pizza ngon nhất mình từng ăn! Vỏ giòn, topping đầy ắp."</p>
+                    <div class="mt-3">
+                        <strong>Hải</strong> <br>
+                        <small class="text-muted">Hà Nội</small>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0 fst-italic">"Giao hàng rất nhanh và đúng hẹn, pizza còn nóng hổi!"</p>
-                    <footer class="blockquote-footer mt-2">Trang, TP.HCM</footer>
-                </blockquote>
+                <div class="p-4 rounded-4 shadow-sm review-card h-100 bg-white">
+                    <p class="fst-italic">"Giao hàng nhanh và pizza vẫn còn nóng, rất hài lòng."</p>
+                    <div class="mt-3">
+                        <strong>Trang</strong> <br>
+                        <small class="text-muted">TP.HCM</small>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <blockquote class="blockquote">
-                    <p class="mb-0 fst-italic">"Dịch vụ tốt, chất lượng tuyệt vời, chắc chắn sẽ quay lại."</p>
-                    <footer class="blockquote-footer mt-2">Linh, Đà Nẵng</footer>
-                </blockquote>
+                <div class="p-4 rounded-4 shadow-sm review-card h-100 bg-white">
+                    <p class="fst-italic">"Dịch vụ tốt, nhân viên thân thiện, chắc chắn sẽ quay lại."</p>
+                    <div class="mt-3">
+                        <strong>Linh</strong> <br>
+                        <small class="text-muted">Đà Nẵng</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    .feature-card, .review-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-radius 0.25s ease; /* thêm transition cho bo góc */
+    }
+
+        .feature-card:hover, .review-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            border-radius: 20px; /* bo góc nhiều hơn khi hover */
+        }
+
+</style>
+
+                    
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
