@@ -186,28 +186,29 @@ namespace OnlinePizzaWebApplication.Controllers
 
             var pizzas = await _pizzaRepo.GetByIdIncludedAsync(id);
 
-            var listOfIngredients = await _context.PizzaIngredients.Where(x => x.PizzaId == id).Select(x => x.Ingredient.Name).ToListAsync();
-            ViewBag.PizzaIngredients = listOfIngredients;
-
-            //var listOfReviews = await _context.Reviews.Where(x => x.PizzaId == id).Select(x => x).ToListAsync();
-            //ViewBag.Reviews = listOfReviews;
-            double score;
-            if (_context.Reviews.Any(x => x.PizzaId == id))
-            {
-                var review = _context.Reviews.Where(x => x.PizzaId == id);
-                score = review.Average(x => x.Grade);
-                score = Math.Round(score, 2);
-            }
-            else
-            {
-                score = 0;
-            }
-            ViewBag.AverageReviewScore = score;
-
             if (pizzas == null)
             {
                 return NotFound();
             }
+
+            // Danh sách nguyên liệu
+            var listOfIngredients = await _context.PizzaIngredients
+                .Where(x => x.PizzaId == id)
+                .Select(x => x.Ingredient.Name)
+                .ToListAsync();
+            ViewBag.PizzaIngredients = listOfIngredients;
+
+            // Danh sách reviews
+            var reviews = await _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Pizza)
+                .Where(r => r.PizzaId == id)
+                .ToListAsync();
+            ViewBag.Reviews = reviews;
+
+            // Tính điểm trung bình
+            double score = reviews.Any() ? Math.Round(reviews.Average(x => x.Grade), 2) : 0;
+            ViewBag.AverageReviewScore = score;
 
             return View(pizzas);
         }
@@ -421,4 +422,5 @@ public class PizzasController : Controller
 
         return PartialView("SearchResultsPartial", results);
     }
+
 }
